@@ -75,7 +75,6 @@ def query_home_address(request, user_id, address_string):
 		try:
 			exists = EXCLUDE[link.string]
 		except KeyError:
-			print link.get('href')
 			if 'co=C0' in link.get('href'):
 				return [address_string]
 			return_data.append(link.string)
@@ -85,10 +84,11 @@ def query_home_address(request, user_id, address_string):
 @jsonview()
 def register_address(request, user_id, address_string):
 	try:
-		user = UserProfile.objects.get(user_id=user_id)
+		user = UserProfile.objects.get(uuid=user_id)
 		user.address = address_string.encode('utf-8')
+		user.save()
 		return [address_string]
-	except Exception:
+	except Exception, e:
 		return []
 
 @jsonview()

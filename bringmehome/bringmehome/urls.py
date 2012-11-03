@@ -12,8 +12,8 @@ urlpatterns = patterns('',
     url(r'^$', 'bringmehome.apps.web.views.landing', name='landing'),
 
     #new user auth landing page
-    url(r'^/signup/(?P<user_id>.+)/$', 'bringmehome.apps.web.views.home', name='home'),
-    url(r'^/privacy$', 'bringmehome.apps.web.views.privacy', name='privacy'),
+    url(r'^signup/(?P<user_id>.+)/$', 'bringmehome.apps.web.views.home', name='home'),
+    url(r'^privacy$', 'bringmehome.apps.web.views.privacy', name='privacy'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

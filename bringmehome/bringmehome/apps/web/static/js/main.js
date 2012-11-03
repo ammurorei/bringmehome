@@ -1,7 +1,8 @@
 $(document).ready(function () {
 	$('#address-form').submit(function (e) {
 		e.preventDefault();
-		var address = $(this).find('#address-input').val();
+		var address = $(this).find('#address-input').val(),
+		user_id = $('#user-id').val();
 		data = {
 			'url': ('/rest/address/' + user_id + '/'  + address),
 			'type': 'GET',
@@ -11,7 +12,7 @@ $(document).ready(function () {
 				} else {
 					$('#variable-content').empty().append($('<h3>Select your address:</h3><ol id="address-select" style="list-style-type:none;"></ol>'));
 					$.each(response, function (idx, itm) {
-						var tag = '<li style="margin: 15px 0px 15px 0px;"><a class="btn btn-primary">' + itm + '</a></li>';
+						var tag = '<li style="margin: 15px 0px 15px 0px;"><a class="btn btn-primary address-select">' + itm + '</a></li>';
 						$('#variable-content').find('ol').append($(tag));
 					});
 				}
@@ -24,7 +25,8 @@ $(document).ready(function () {
 		return false;
 	});
 
-	$('#address-select').click(function (e) {
+	$('.address-select').live('click', function (e) {
+		console.log(1)
 		e.preventDefault();
 		var address = $(this).text(),
 		user_id = $('#user-id').val();
