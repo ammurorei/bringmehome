@@ -104,6 +104,8 @@ def query_way_home(request):
 	return_data = []
 
 	match = re.compile('^(conL)|(conD)$')
+	now = datetime.datetime.now() #this is for our servers!  not the user!
+	journey_time = now + datetime.timedelta(0,3600)
 
 	data = urllib.urlencode({
 			'REQ0HafasInitialSelection':0,
@@ -112,8 +114,8 @@ def query_way_home(request):
 			'REQ0JourneyStopsZ0A': 255,
 			'REQ0JourneyStopsZ0G': user.address, #from user
 			#REQ0JourneyStopsZ0ID: 0,
-			'REQ0JourneyDate': datetime.datetime.now().strftime("%d.%m.%y"), #now for us not for user!
-			'REQ0JourneyTime': datetime.datetime.now().strftime("%H:%S"), #now as above
+			'REQ0JourneyDate': journey_time.strftime("%d.%m.%y"),
+			'REQ0JourneyTime': journey_time.strftime("%H:%S"),
 			'REQ0HafasSearchForw':1,
 			'start':'Suchen',
 		})
