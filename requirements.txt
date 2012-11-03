@@ -1,0 +1,5 @@
+BeautifulSoup==3.2.1
+Django==1.4.2
+foursquare==20120716
+httplib2==0.7.6
+simplejson==2.6.2
