@@ -115,8 +115,25 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'bringmehome.apps.web'
+    'bringmehome.apps.web',
+    'bringmehome.apps.rest',
+    'bringmehome.apps.oauth',
 )
+
+
+import dj_database_url
+DATABASES = {'default': dj_database_url.config()}
+
+
+#Client id
+CLIENT_ID = "JO1CDG0OWUP5KNG5DMPNALIWQGR31E4FY4GNEA2L1EAHCX5N"
+#Client secret
+CLIENT_SECRET = "WAEHBJLF0UOQBYWAIGUWUC4U1S244BNSUPEU0RCW4HD1YTU5"
+#Push secret
+PUSH_SECRET = "ZO0ZWK30EMBZHEUY5NQFGCMXKESDSPUCL1W2PF1MDHPV0ZSQ"
+
+#Callback url
+CALLBACK_URL = "http://bringmehome.herokuapp.com/oauth/callback"
 
 try:
     from localsettings import *
@@ -151,6 +168,3 @@ LOGGING = {
         },
     }
 }
-
-import dj_database_url
-DATABASES = {'default': dj_database_url.config()}

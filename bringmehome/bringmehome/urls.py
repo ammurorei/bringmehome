@@ -10,11 +10,12 @@ admin.autodiscover()
 urlpatterns = patterns('',
     
     url(r'^$', 'bringmehome.apps.web.views.home', name='home'),
-    # url(r'^bringmehome/', include('bringmehome.foo.urls')),
+    url(r'^/privacy$', 'bringmehome.apps.web.views.privacy', name='privacy'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
+    (r'^oauth/', include('bringmehome.apps.oauth.urls')),
+    (r'^rest/', include('bringmehome.apps.rest.urls')),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
