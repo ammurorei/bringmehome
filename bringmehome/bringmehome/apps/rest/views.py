@@ -95,13 +95,11 @@ def register_address(request, user_id, address_string):
 		return []
 
 @csrf_exempt
-@jsonview()
+#@jsonview()
 def query_way_home(request):
-	print request.POST['checkin']
+
 	user_data = json.loads(request.POST['checkin'])
 	checkin_id = user_data['id']
-
-	print user_data
 
 	client = foursquare.Foursquare(client_id=settings.CLIENT_ID, client_secret=settings.CLIENT_SECRET, redirect_uri=settings.CALLBACK_URL)
 
@@ -131,7 +129,7 @@ def query_way_home(request):
 		})
 	request = urllib2.urlopen(BVG_URL, data)
 	response = request.read()
-	print response
+	
 	response_data = BeautifulSoup(response)
 
 	links = response_data.find_all('a')
@@ -153,15 +151,14 @@ def query_way_home(request):
 			#print "====================================================="
 			#print "====================================================="
 			#print "====================================================="
-	return return_data
-	#message = "hi there!"
+	#return return_data
+	message = "hi there!"
 
-	#client.checkins.reply(checkin_id, {'text': message}) #add url later
+	client.checkins.reply(checkin_id, {'text': message}) #add url later
 
-	#r = HttpResponse()
-
-	#r.status_code = 200
-	#return r
+	r = HttpResponse()
+	r.status_code = 200
+	return r
 
 
 
