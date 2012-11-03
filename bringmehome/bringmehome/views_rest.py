@@ -78,7 +78,10 @@ def query_home_address(request, address_string):
 	return return_data
 
 @jsonview()
-def query_way_home(request, location, address_string):
+def query_way_home(request):
+
+	user_data = json.loads(request.POST('data'))
+
 	return_data = []
 
 	match = re.compile('^(conL)|(conD)$')
@@ -88,7 +91,7 @@ def query_way_home(request, location, address_string):
 			'queryDisplayed': True,
 			'SID':'A=16@X=13411086@Y=52551357@O=Von hier starten', #Checkin location data
 			'REQ0JourneyStopsZ0A': 255,
-			'REQ0JourneyStopsZ0G': address_string,
+			'REQ0JourneyStopsZ0G': '52 friedelstrasse', #from user
 			#REQ0JourneyStopsZ0ID: 0,
 			'REQ0JourneyDate':'03.11.12', #now
 			'REQ0JourneyTime':'15:10', #now
