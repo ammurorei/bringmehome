@@ -104,18 +104,18 @@ def query_way_home(request):
 	return_data = []
 
 	match = re.compile('^(conL)|(conD)$')
-	now = datetime.datetime.now() #this is for our servers!  not the user!
-	journey_time = now + datetime.timedelta(0,3600)
+	now = datetime.datetime.now() + datetime.timedelta(minutes=300) #now is for our servers!  not the user! set it to berlin
+	journey_time = now + datetime.timedelta(minutes=60)
 
 	data = urllib.urlencode({
 			'REQ0HafasInitialSelection':0,
 			'queryDisplayed': True,
 			'SID':'A=16@X=%s@Y=%s@O=Von hier starten' % (user_data['venue']['location']['lng'], user_data['venue']['location']['lat']), #Checkin location data
 			'REQ0JourneyStopsZ0A': 255,
-			'REQ0JourneyStopsZ0G': user.address, #from user
+			'REQ0JourneyStopsZ0G': user.address,
 			#REQ0JourneyStopsZ0ID: 0,
 			'REQ0JourneyDate': journey_time.strftime("%d.%m.%y"),
-			'REQ0JourneyTime': journey_time.strftime("%H:%S"),
+			'REQ0JourneyTime': journey_time.strftime("%H:%M"),
 			'REQ0HafasSearchForw':1,
 			'start':'Suchen',
 		})
