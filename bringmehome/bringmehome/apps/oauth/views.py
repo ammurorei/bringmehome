@@ -29,8 +29,10 @@ def callback(request):
 	# Get the user's data
 	fsq_user = client.users()
 
-	u, created = UserProfile.objects.get_or_create(foursquare_id=fsq_user.get('user').get('id'), oauth_token=access_token)
+	u, created = UserProfile.objects.get_or_create(foursquare_id=fsq_user.get('user').get('id'))
+	u.oauth_token=access_token
 	u.save()
 	print "created user ", u
+	print "oauth_token ", u.oauth_token
 	print "created new user? ", created
-	return redirect('home', {'user_id': u.uuid})
+	return redirect('home', user_id=u.uuid)

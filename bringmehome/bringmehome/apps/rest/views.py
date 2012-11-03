@@ -137,3 +137,7 @@ def query_way_home(request):
 			#print "====================================================="
 			#print "====================================================="
 	return return_data
+
+
+#def handle_push(request):
+
