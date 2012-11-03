@@ -12,4 +12,4 @@ def home(request, user_id):
 	return render(request, 'home.html', ctx)
 
 def privacy(request):
-	return render(request, 'privacy.html')	
+	return render(request, 'privacy.html')

@@ -92,7 +92,7 @@ def register_address(request, user_id, address_string):
 		return []
 
 @jsonview()
-def query_way_home(request, user_id):
+def query_way_home(request):
 
 	user_data = json.loads(request.POST('data'))
 

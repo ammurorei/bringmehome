@@ -26,7 +26,6 @@ $(document).ready(function () {
 	});
 
 	$('.address-select').live('click', function (e) {
-		console.log(1)
 		e.preventDefault();
 		var address = $(this).text(),
 		user_id = $('#user-id').val();
