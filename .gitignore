@@ -3,3 +3,5 @@
 *.pot
 *.pyc
 localsettings.py
+heroku
+heroku.pub
