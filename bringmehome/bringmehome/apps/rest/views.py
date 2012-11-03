@@ -4,9 +4,12 @@ import datetime
 import functools
 import urllib
 import urllib2
+from bringmehome import settings
 from bs4 import BeautifulSoup
+import foursquare
 
 from bringmehome.apps.rest.models import UserProfile
+from django.views.decorators.csrf import csrf_exempt
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -91,10 +94,16 @@ def register_address(request, user_id, address_string):
 	except Exception, e:
 		return []
 
+@csrf_exempt
 @jsonview()
 def query_way_home(request):
+	print request.POST['checkin']
+	user_data = json.loads(request.POST['checkin'])
+	checkin_id = user_data['id']
 
-	user_data = json.loads(request.POST('data'))
+	print user_data
+
+	client = foursquare.Foursquare(client_id=settings.CLIENT_ID, client_secret=settings.CLIENT_SECRET, redirect_uri=settings.CALLBACK_URL)
 
 	try:
 		user = UserProfile.objects.get(foursquare_id=user_data['user']['id'])
@@ -110,9 +119,10 @@ def query_way_home(request):
 	data = urllib.urlencode({
 			'REQ0HafasInitialSelection':0,
 			'queryDisplayed': True,
-			'SID':'A=16@X=%s@Y=%s@O=Von hier starten' % (user_data['venue']['location']['lng'], user_data['venue']['location']['lat']), #Checkin location data
+			#'SID':'A=16@X=%s@Y=%s@O=Von hier starten' % (user_data['venue']['location']['lng'], user_data['venue']['location']['lat']), #Checkin location data
+			'SID':'A=16@X=13411086@Y=52551357@O=Von hier starten',
 			'REQ0JourneyStopsZ0A': 255,
-			'REQ0JourneyStopsZ0G': user.address,
+			'REQ0JourneyStopsZ0G': user.address.encode('utf-8'),
 			#REQ0JourneyStopsZ0ID: 0,
 			'REQ0JourneyDate': journey_time.strftime("%d.%m.%y"),
 			'REQ0JourneyTime': journey_time.strftime("%H:%M"),
@@ -121,7 +131,7 @@ def query_way_home(request):
 		})
 	request = urllib2.urlopen(BVG_URL, data)
 	response = request.read()
-
+	print response
 	response_data = BeautifulSoup(response)
 
 	links = response_data.find_all('a')
@@ -144,6 +154,15 @@ def query_way_home(request):
 			#print "====================================================="
 			#print "====================================================="
 	return return_data
+	#message = "hi there!"
+
+	#client.checkins.reply(checkin_id, {'text': message}) #add url later
+
+	#r = HttpResponse()
+
+	#r.status_code = 200
+	#return r
+
 
 
 
