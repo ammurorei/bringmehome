@@ -96,6 +96,11 @@ def query_way_home(request):
 
 	user_data = json.loads(request.POST('data'))
 
+	try:
+		user = UserProfile.objects.get(foursquare_id=user_data['user']['id'])
+	except Exception:
+		raise Http404
+
 	return_data = []
 
 	match = re.compile('^(conL)|(conD)$')
@@ -103,12 +108,12 @@ def query_way_home(request):
 	data = urllib.urlencode({
 			'REQ0HafasInitialSelection':0,
 			'queryDisplayed': True,
-			'SID':'A=16@X=13411086@Y=52551357@O=Von hier starten', #Checkin location data
+			'SID':'A=16@X=%s@Y=%s@O=Von hier starten' % (user_data['venue']['location']['lng'], user_data['venue']['location']['lat']), #Checkin location data
 			'REQ0JourneyStopsZ0A': 255,
-			'REQ0JourneyStopsZ0G': '52 friedelstrasse', #from user
+			'REQ0JourneyStopsZ0G': user.address, #from user
 			#REQ0JourneyStopsZ0ID: 0,
-			'REQ0JourneyDate':'03.11.12', #now
-			'REQ0JourneyTime':'15:10', #now
+			'REQ0JourneyDate': datetime.datetime.now().strftime("%d.%m.%y"), #now for us not for user!
+			'REQ0JourneyTime': datetime.datetime.now().strftime("%H:%S"), #now as above
 			'REQ0HafasSearchForw':1,
 			'start':'Suchen',
 		})
@@ -125,7 +130,7 @@ def query_way_home(request):
 			url = BVG_ROOT + link.get('href')
 			link_request = urllib2.urlopen(url)
 			link_data = BeautifulSoup(link_request.read())
-			
+
 			routes = link_data.find_all('p', {'class': match})
 			for route in routes:
 				#print "------------------------------------------------"
@@ -139,5 +144,4 @@ def query_way_home(request):
 	return return_data
 
 
-#def handle_push(request):
 
