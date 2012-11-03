@@ -115,7 +115,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'bringmehome.apps.web'
+    'bringmehome.apps.web',
+    'bringmehome.apps.rest',
 )
 
 try:
@@ -151,6 +152,3 @@ LOGGING = {
         },
     }
 }
-
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
