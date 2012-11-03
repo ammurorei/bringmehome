@@ -1,24 +1,16 @@
 # Django settings for bringmehome project.
+import os
+here = lambda x: os.path.join(os.path.dirname(os.path.abspath(__file__)), x)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Isac', 'isac.petruzzi@gmail.com'),
+    ('Hannes', 'hannes.probst@gmail.com'),
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -103,6 +95,7 @@ ROOT_URLCONF = 'bringmehome.urls'
 WSGI_APPLICATION = 'bringmehome.wsgi.application'
 
 TEMPLATE_DIRS = (
+    here("templates"),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -116,10 +109,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+try:
+    from localsettings import *
+except:
+    print "Failed to load localsettings.py. Please use localsettings.py.sample for template."
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
