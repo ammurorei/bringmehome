@@ -6,9 +6,11 @@ import urllib
 import urllib2
 from bs4 import BeautifulSoup
 
+from bringmehome.apps.rest.models import UserProfile
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 BVG_ROOT = 'http://mobil.bvg.de'
 BVG_URL = 'http://mobil.bvg.de/Fahrinfo/bin/query.bin/dox'
@@ -47,14 +49,14 @@ def jsonview(**jsonargs):
 	return outer
 
 @jsonview()
-def query_home_address(request, address_string):
-	#decode ASCII address!!!
+def query_home_address(request, user_id, address_string):
+
 	data = urllib.urlencode({
 			'REQ0HafasInitialSelection':0,
 			'queryDisplayed': True,
 			'SID':'A=16@X=13411086@Y=52551357@O=Von hier starten', #Checkin location data
 			'REQ0JourneyStopsZ0A':255,
-			'REQ0JourneyStopsZ0G': address_string,
+			'REQ0JourneyStopsZ0G': address_string.encode('utf-8'),
 			#REQ0JourneyStopsZ0ID: 0,
 			'REQ0JourneyDate':'03.11.12', #now
 			'REQ0JourneyTime':'15:10', #now
@@ -73,12 +75,24 @@ def query_home_address(request, address_string):
 		try:
 			exists = EXCLUDE[link.string]
 		except KeyError:
+			print link.get('href')
+			if 'co=C0' in link.get('href'):
+				return [address_string]
 			return_data.append(link.string)
 
 	return return_data
 
 @jsonview()
-def query_way_home(request):
+def register_address(request, user_id, address_string):
+	try:
+		user = UserProfile.objects.get(user_id=user_id)
+		user.address = address_string.encode('utf-8')
+		return [address_string]
+	except Exception:
+		return []
+
+@jsonview()
+def query_way_home(request, user_id):
 
 	user_data = json.loads(request.POST('data'))
 
