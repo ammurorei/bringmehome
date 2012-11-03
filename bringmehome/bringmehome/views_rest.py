@@ -73,8 +73,6 @@ def query_home_address(request, address_string):
 		try:
 			exists = EXCLUDE[link.string]
 		except KeyError:
-			print link.string
-			print link.get('href')
 			return_data.append(link.string)
 
 	return return_data
@@ -113,12 +111,12 @@ def query_way_home(request, location, address_string):
 			
 			routes = link_data.find_all('p', {'class': match})
 			for route in routes:
-				print "------------------------------------------------"
-				print route.renderContents()
-				print '------------------------------------------------'
+				#print "------------------------------------------------"
+				#print route.renderContents()
+				#print '------------------------------------------------'
 				l.append(route.encode("utf-8"))
 			return_data.append(l)
-			print "====================================================="
-			print "====================================================="
-			print "====================================================="
+			#print "====================================================="
+			#print "====================================================="
+			#print "====================================================="
 	return return_data
