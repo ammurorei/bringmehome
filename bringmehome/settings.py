@@ -259,6 +259,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gunicorn',
+    'raven.contrib.django',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -284,6 +285,10 @@ PUSH_SECRET = "ZO0ZWK30EMBZHEUY5NQFGCMXKESDSPUCL1W2PF1MDHPV0ZSQ"
 #Callback url
 CALLBACK_URL = "http://bringmehome.herokuapp.com/oauth/callback"
 
+# Set your DSN value
+SENTRY_DSN = 'https://6c758800b2e340e2b261199eba97e8b0:0967758e64b945dc9686749b204d1842@app.getsentry.com/3445'
+
+
 try:
     from localsettings import *
 except:
@@ -299,7 +304,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'root': {
         'level': 'INFO',
-        'handlers': ['console'],
+        'handlers': ['console', 'sentry'],
     },
     'formatters': {
         'simple': {
@@ -314,6 +319,10 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.handlers.SentryHandler'
         },
         'accesslog': {
             'level': 'INFO',
