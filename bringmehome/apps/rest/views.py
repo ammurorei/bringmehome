@@ -97,7 +97,8 @@ def register_address(request, user_id, address_string):
 @csrf_exempt
 #@jsonview()
 def query_way_home(request):
-
+	print "request: ", request
+	print "POST ", request.POST
 	user_data = json.loads(request.POST['checkin'])
 	checkin_id = user_data['id']
 
