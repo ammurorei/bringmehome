@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     'bringmehome.apps.oauth',
 )
 
+BROKER_BACKEND = 'django'
 
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
