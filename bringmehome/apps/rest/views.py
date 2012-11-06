@@ -109,6 +109,9 @@ def query_way_home(request):
 	except Exception:
 		raise Http404
 
+	# Apply the returned access token to the client
+	client.set_access_token(user.oauth_token)
+
 	return_data = []
 
 	match = re.compile('^(conL)|(conD)$')
