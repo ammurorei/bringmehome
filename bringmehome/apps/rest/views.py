@@ -17,6 +17,8 @@ from django.http import HttpResponse, Http404
 
 BVG_ROOT = 'http://mobil.bvg.de'
 BVG_URL = 'http://mobil.bvg.de/Fahrinfo/bin/query.bin/dox'
+BVG_MATCH = re.compile('^(conL)|(conD)$')
+GEO_MATCH = re.compile('([0-9]{2})\.([0-9]{6}).*') #from BVG website
 
 EXCLUDE = {
 	"English" : 0,
@@ -95,10 +97,9 @@ def register_address(request, user_id, address_string):
 		return []
 
 @csrf_exempt
-#@jsonview()
+#@jsonview() #testing
 def query_way_home(request):
-	print "request: ", request
-	print "POST ", request.POST
+
 	user_data = json.loads(request.POST['checkin'])
 	checkin_id = user_data['id']
 
@@ -114,15 +115,19 @@ def query_way_home(request):
 
 	return_data = []
 
-	match = re.compile('^(conL)|(conD)$')
-	now = datetime.datetime.now() + datetime.timedelta(minutes=300) #now is for our servers!  not the user! set it to berlin
+	now = datetime.datetime.now() #locale should be set to berlin
 	journey_time = now + datetime.timedelta(minutes=60)
+
+	lng = str(user_data['venue']['location']['lng'])
+	lat = str(user_data['venue']['location']['lat'])
+
+	lng_match = re.match(GEO_MATCH, lng)
+	lat_match = re.match(GEO_MATCH, lat)
 
 	data = urllib.urlencode({
 			'REQ0HafasInitialSelection':0,
 			'queryDisplayed': True,
-			#'SID':'A=16@X=%s@Y=%s@O=Von hier starten' % (user_data['venue']['location']['lng'], user_data['venue']['location']['lat']), #Checkin location data
-			'SID':'A=16@X=13411086@Y=52551357@O=Von hier starten',
+			'SID':'A=16@X=%s%s@Y=%s%s@O=Von hier starten' % (lng_match.group(1), lng_match.group(2), lat_match.group(1), lat_match.group(2)), #Checkin location data translated to BVG specs
 			'REQ0JourneyStopsZ0A': 255,
 			'REQ0JourneyStopsZ0G': user.address.encode('utf-8'),
 			#REQ0JourneyStopsZ0ID: 0,
@@ -138,27 +143,25 @@ def query_way_home(request):
 
 	links = response_data.find_all('a')
 
+	message = 'Bring me home!'
+
 	for link in links:
 		if 'co=C0' in link.get('href'):
-			l = []
 			url = BVG_ROOT + link.get('href')
-			link_request = urllib2.urlopen(url)
-			link_data = BeautifulSoup(link_request.read())
+			route_request = urllib2.urlopen(url)
+			route_data = BeautifulSoup(route_request.read())
 
-			routes = link_data.find_all('p', {'class': match})
-			for route in routes:
-				#print "------------------------------------------------"
-				#print route.renderContents()
-				#print '------------------------------------------------'
-				l.append(route.encode("utf-8"))
-			return_data.append(l)
-			#print "====================================================="
-			#print "====================================================="
-			#print "====================================================="
-	#return return_data
-	message = "hi there!"
+			stages = route_data.find_all('p', {'class': BVG_MATCH})
+			for stage in stages:
+				fragment = stage.text
+				cleaned = fragment.replace('\n', ' ')
+				message += cleaned
 
-	client.checkins.reply(checkin_id, {'text': message}) #add url later
+			break #usually 3 routes, we'll hack it to just query the first route
+
+	#return [message.encode("utf-8")] #testing
+
+	client.checkins.reply(checkin_id, {'text': message.encode("utf-8")}) #add url parameter later
 
 	r = HttpResponse()
 	r.status_code = 200
