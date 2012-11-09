@@ -134,6 +134,7 @@ CLIENT_SECRET = "WAEHBJLF0UOQBYWAIGUWUC4U1S244BNSUPEU0RCW4HD1YTU5"
 PUSH_SECRET = "ZO0ZWK30EMBZHEUY5NQFGCMXKESDSPUCL1W2PF1MDHPV0ZSQ"
 
 #Callback url
+CALLBACK_URL = "https://bringmehome.herokuapp.com/oauth/callback"
 
 try:
     from localsettings import *
